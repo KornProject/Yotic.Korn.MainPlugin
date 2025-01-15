@@ -1,6 +1,7 @@
 ﻿using Korn;
 using Korn.Plugins.Core;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 class MainPlugin : Plugin
 {
@@ -26,7 +27,6 @@ class MainPlugin : Plugin
             Logger = new LocalLogger(logFile);
 
             Logger.WriteMessage("MainPlugin initialized");
-            KornLogger.WriteMessage("message!");
         }
     }
 
@@ -41,7 +41,23 @@ class MainPlugin : Plugin
     CodeAnalysisCSharpAssembly? codeAnalysisCSharoAssenbly;
     void OnAssemblyLoaded(string name)
     {
-        if (name == "Microsoft.CodeAnalysis.CSharp")
-            codeAnalysisCSharoAssenbly = new CodeAnalysisCSharpAssembly();
+        try
+        {
+            if (name == "Microsoft.CodeAnalysis.CSharp")
+            {
+                AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+
+                codeAnalysisCSharoAssenbly = new CodeAnalysisCSharpAssembly();
+            }
+        } 
+        catch (Exception ex)
+        {
+            KornLogger.Error(ex.ToString());
+        }
+    }
+
+    Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
+    {
+        return AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == args.Name.Split(", ")[0]);
     }
 }

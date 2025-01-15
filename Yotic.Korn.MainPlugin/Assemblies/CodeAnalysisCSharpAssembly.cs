@@ -1,17 +1,66 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
+﻿using Korn;
+using Korn.CLR;
+using Korn.Hooking;
+using Microsoft.CodeAnalysis.CSharp;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
-class CodeAnalysisCSharpAssembly : IDisposable
+unsafe class CodeAnalysisCSharpAssembly : IDisposable
 {
     public CodeAnalysisCSharpAssembly()
-    {
-        MainPlugin.Logger.WriteMessage("CodeAnalysisCSharpAssembly->.ctor");
+    {        
+        hooks =
+        [
+            MethodHook.Create(SyntaxFacts.GetKeywordKind).AddHook(GetKeywordKind),
+            MethodHook.Create((Func<SyntaxKind, string>)SyntaxFacts.GetText).AddHook(GetText),
+        ];
 
-        var kind = SyntaxFacts.GetKeywordKind("return");
-        MainPlugin.Logger.WriteMessage("kind: " + kind);
+        EnableHooks();
     }
 
-    public void Dispose()
-    {
+    MethodHook[] hooks;
 
+    static bool GetKeywordKind(ref string text, ref SyntaxKind result)
+    {
+        KornLogger.WriteMessage($"GetKeywordKind! {Process.GetCurrentProcess().ProcessName}");
+
+        if (text == "ret")
+        {
+            result = SyntaxKind.ReturnKeyword;
+            return false;
+        }
+        else if (text == "return")
+        {
+            result = SyntaxKind.None;
+            return false;
+        }
+
+        return true;
     }
+
+    static bool GetText(ref SyntaxKind kind, ref string result)
+    {
+        KornLogger.WriteMessage($"GetText! {Process.GetCurrentProcess().ProcessName}");
+        if (kind == SyntaxKind.ReturnKeyword)
+        {
+            result = "ret";
+            return false;
+        }
+
+        return true;
+    }
+
+    void EnableHooks()
+    {
+        foreach (var hook in hooks)
+            hook.Enable();
+    }
+
+    void DisableHooks()
+    {
+        foreach (var hook in hooks)
+            hook.Disable();
+    }
+
+    public void Dispose() => DisableHooks();
 }
