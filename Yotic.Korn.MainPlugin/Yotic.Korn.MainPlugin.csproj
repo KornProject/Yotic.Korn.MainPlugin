@@ -1,32 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <TargetFrameworks>net8.0-windows;net472</TargetFrameworks>
     <Platforms>x64</Platforms>
-    <BaseOutputPath></BaseOutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <SignAssembly>False</SignAssembly>
+    <AssemblyOriginatorKeyFile>C:\a.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Korn.CLR\Korn.CLR\Korn.CLR.csproj" />
     <ProjectReference Include="..\..\Korn.Hooking\Korn.Hooking\Korn.Hooking.csproj" />
+    <ProjectReference Include="..\..\Korn.Interface\Korn.Interface\Korn.Interface.csproj" />
     <ProjectReference Include="..\..\Korn.Logger\Korn.Logger\Korn.Logger.csproj" />
     <ProjectReference Include="..\..\Korn.Plugins.Core\Korn.Plugins.Core\Korn.Plugins.Core.csproj" />
-    <ProjectReference Include="..\..\Korn.Plugins.ExternalInterface\Korn.Plugins.ExternalInterface\Korn.Plugins.ExternalInterface.csproj" />
-    <ProjectReference Include="..\..\Korn.Utils.System\Korn.Utils.System\Korn.Utils.System.csproj" />
+    <ProjectReference Include="..\..\Korn.Shared.Internal\Korn.Shared.Internal\Korn.Shared.Internal.csproj" />
+    <ProjectReference Include="..\..\Korn.Shared\Korn.Shared\Korn.Shared.csproj" />
+    <ProjectReference Include="..\..\Korn.Utils.Algorithms\Korn.Utils.Algorithms\Korn.Utils.Algorithms.csproj" />
+    <ProjectReference Include="..\..\Korn.Utils.Assembler\Korn.Utils.Assembler\Korn.Utils.Assembler.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0-windows'">
+	 <Reference Include="Microsoft.CodeAnalysis">
+	  <HintPath>..\..\..\..\..\..\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\VBCSharp\LanguageServices\Core\Microsoft.CodeAnalysis.dll</HintPath>
+	  <Private>False</Private>
+	 </Reference>
+	 <Reference Include="Microsoft.CodeAnalysis.CSharp">
+	  <HintPath>..\..\..\..\..\..\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\VBCSharp\LanguageServices\Core\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+	  <Private>False</Private>
+	 </Reference>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net472'">
     <Reference Include="Microsoft.CodeAnalysis">
-      <HintPath>..\..\..\..\..\..\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\VBCSharp\LanguageServices\Core\Microsoft.CodeAnalysis.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
+     <HintPath>..\..\..\..\..\..\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\VBCSharp\LanguageServices\Microsoft.CodeAnalysis.dll</HintPath>
+	  <Private>False</Private>
+	</Reference>
     <Reference Include="Microsoft.CodeAnalysis.CSharp">
-      <HintPath>..\..\..\..\..\..\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\VBCSharp\LanguageServices\Core\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
+     <HintPath>..\..\..\..\..\..\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\VBCSharp\LanguageServices\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+	  <Private>False</Private>
+	</Reference>
   </ItemGroup>
 
 </Project>

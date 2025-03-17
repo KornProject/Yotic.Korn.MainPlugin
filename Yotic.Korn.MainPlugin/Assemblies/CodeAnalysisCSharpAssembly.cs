@@ -1,66 +1,46 @@
-﻿using Korn;
-using Korn.CLR;
+﻿using Microsoft.CodeAnalysis.CSharp;
+using Korn.Plugins.Core.Interfaces;
+using System.Collections.Generic;
 using Korn.Hooking;
-using Microsoft.CodeAnalysis.CSharp;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
+using System;
+using System.Runtime.CompilerServices;
 
-unsafe class CodeAnalysisCSharpAssembly : IDisposable
+unsafe class CodeAnalysisCSharpAssembly : IHookImplemention
 {
     public CodeAnalysisCSharpAssembly()
-    {        
-        hooks =
-        [
-            MethodHook.Create(SyntaxFacts.GetKeywordKind).AddHook(GetKeywordKind),
-            MethodHook.Create((Func<SyntaxKind, string>)SyntaxFacts.GetText).AddHook(GetText),
-        ];
-
-        EnableHooks();
+    {
+        this
+        .AddHook((Func<string, SyntaxKind>)SyntaxFacts.GetKeywordKind, "GetKeywordKind")
+        .AddHook((Func<SyntaxKind, string>)SyntaxFacts.GetText, "GetText")
+        .EnableHooks();
     }
 
-    MethodHook[] hooks;
+    List<MethodHook> hooks = new List<MethodHook>();
+    public List<MethodHook> Hooks => hooks;
 
+    [MethodImpl(MethodImplOptions.NoOptimization)]
     static bool GetKeywordKind(ref string text, ref SyntaxKind result)
-    {
-        KornLogger.WriteMessage($"GetKeywordKind! {Process.GetCurrentProcess().ProcessName}");
-
-        if (text == "ret")
+    {        
+        if (text == "ретёрн")
         {
             result = SyntaxKind.ReturnKeyword;
             return false;
-        }
-        else if (text == "return")
-        {
-            result = SyntaxKind.None;
-            return false;
-        }
+        }        
 
         return true;
     }
 
+    [MethodImpl(MethodImplOptions.NoOptimization)]
     static bool GetText(ref SyntaxKind kind, ref string result)
-    {
-        KornLogger.WriteMessage($"GetText! {Process.GetCurrentProcess().ProcessName}");
+    {        
         if (kind == SyntaxKind.ReturnKeyword)
         {
-            result = "ret";
+            result = "ретёрн";
             return false;
         }
-
+                
         return true;
     }
 
-    void EnableHooks()
-    {
-        foreach (var hook in hooks)
-            hook.Enable();
-    }
-
-    void DisableHooks()
-    {
-        foreach (var hook in hooks)
-            hook.Disable();
-    }
-
-    public void Dispose() => DisableHooks();
+    public void Dispose() => this.DisposeHooks();
 }

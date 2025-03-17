@@ -1,63 +1,34 @@
-﻿using Korn;
-using Korn.Plugins.Core;
-using System.Diagnostics.CodeAnalysis;
+﻿using Korn.Plugins.Core;
 using System.Reflection;
+using Korn;
 
 class MainPlugin : Plugin
-{
-    [AllowNull] public static LocalLogger Logger;
-    [AllowNull] public static string DataDirectory;
-    [AllowNull] static AssemblyWatcher assemblyWatcher;
+{    
+    static MainPlugin instance;
+    public static new KornLogger Logger => ((Plugin)instance).Logger;
 
-    public override void OnLoad()
+    protected override void OnLoad()
     {
-        Initialize();
+        instance = this;
+        Logger.WriteMessage($"MainPlugin started in process \"{CoreEnv.CurrentProcess.ProcessName}\"({CoreEnv.CurrentProcess.Id})");
 
-        assemblyWatcher = new AssemblyWatcher();
-        assemblyWatcher.AssemblyLoaded += OnAssemblyLoaded;
-        assemblyWatcher.EnsureAllAssembliesLoaded();
-
-        void Initialize()
-        {
-            DataDirectory = Path.Combine(PluginDirectory, "Data");
-            if (!Directory.Exists(DataDirectory))
-                Directory.CreateDirectory(DataDirectory);
-
-            var logFile = Path.Combine(DataDirectory, "log.txt");
-            Logger = new LocalLogger(logFile);
-
-            Logger.WriteMessage("MainPlugin initialized");
-        }
+        RegisterAssemblyLoad("Microsoft.CodeAnalysis.CSharp", OnLoadAssembly_CSharpAnalysis);
     }
 
-    public override void OnUnload()
+    protected override void OnUnload()
     {
-        assemblyWatcher.Dispose();
-
-        if (codeAnalysisCSharoAssenbly is not null)
-            codeAnalysisCSharoAssenbly.Dispose();
+        if (codeAnalysisCSharAssembly != null)
+            codeAnalysisCSharAssembly.Dispose();
     }
 
-    CodeAnalysisCSharpAssembly? codeAnalysisCSharoAssenbly;
-    void OnAssemblyLoaded(string name)
+    protected override void OnAssemblyLoaded(Assembly assembly)
     {
-        try
-        {
-            if (name == "Microsoft.CodeAnalysis.CSharp")
-            {
-                AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
 
-                codeAnalysisCSharoAssenbly = new CodeAnalysisCSharpAssembly();
-            }
-        } 
-        catch (Exception ex)
-        {
-            KornLogger.Error(ex.ToString());
-        }
     }
 
-    Assembly? CurrentDomain_AssemblyResolve(object? sender, ResolveEventArgs args)
+    CodeAnalysisCSharpAssembly codeAnalysisCSharAssembly;
+    void OnLoadAssembly_CSharpAnalysis(Assembly assembly)
     {
-        return AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == args.Name.Split(", ")[0]);
+        codeAnalysisCSharAssembly = new CodeAnalysisCSharpAssembly();
     }
 }
