@@ -1,6 +1,8 @@
 ﻿using Korn.Plugins.Core;
 using System.Reflection;
 using Korn;
+using System;
+using System.Linq;
 
 class MainPlugin : Plugin
 {    
@@ -29,6 +31,8 @@ class MainPlugin : Plugin
     CodeAnalysisCSharpAssembly codeAnalysisCSharAssembly;
     void OnLoadAssembly_CSharpAnalysis(Assembly assembly)
     {
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        Logger.WriteMessage($"ass: {assemblies.Length}, last: {assemblies.Last().GetName().Name}, in: {assembly.GetName().Name}");
         codeAnalysisCSharAssembly = new CodeAnalysisCSharpAssembly();
     }
 }

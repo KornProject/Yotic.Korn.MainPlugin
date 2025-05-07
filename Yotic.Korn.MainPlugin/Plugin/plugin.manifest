@@ -1,0 +1,36 @@
+{
+    "Name": "Yotic.Korn.MainPlugin",
+    "DisplayName": "Korn.MainPlugin",
+    "Version": "dev.1.0.0",
+    "Authors": 
+    [
+        {
+            "Name": "Yotic",
+            "Github": "Yoticc"
+        }
+    ],
+    "Targets":
+    [
+        {
+            "TargetFramework": "net472",
+            "TargetProcesses": 
+            [
+                "devenv",
+		            "VBCSCompiler",
+		            "MSBuild"
+            ],
+            "ExecutableFilePath": "bin\\net472\\Yotic.Korn.MainPlugin.dll",
+            "PluginClass": "MainPlugin"
+        },
+        {
+            "TargetFramework": "net8",
+            "TargetProcesses":
+            [
+                "ServiceHub.RoslynCodeAnalysisService",
+		            "ServiceHub.Host.dotnet.x64"
+            ],
+            "ExecutableFilePath": "bin\\net8\\Yotic.Korn.MainPlugin.dll",
+            "PluginClass": "MainPlugin"
+        }
+    ]
+}

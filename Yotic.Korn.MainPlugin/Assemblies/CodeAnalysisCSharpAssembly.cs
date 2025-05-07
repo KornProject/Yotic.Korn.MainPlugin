@@ -20,7 +20,7 @@ unsafe class CodeAnalysisCSharpAssembly : IHookImplemention
 
     [MethodImpl(MethodImplOptions.NoOptimization)]
     static bool GetKeywordKind(ref string text, ref SyntaxKind result)
-    {        
+    {
         if (text == "ретёрн")
         {
             result = SyntaxKind.ReturnKeyword;
