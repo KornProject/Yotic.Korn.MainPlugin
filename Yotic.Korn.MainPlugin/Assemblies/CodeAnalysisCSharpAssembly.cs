@@ -1,23 +1,23 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
+﻿using System.Runtime.CompilerServices;
+using Microsoft.CodeAnalysis.CSharp;
 using Korn.Plugins.Core.Interfaces;
 using System.Collections.Generic;
 using Korn.Hooking;
 using System;
-using System.Runtime.CompilerServices;
 
 unsafe class CodeAnalysisCSharpAssembly : IHookImplemention
 {
     public CodeAnalysisCSharpAssembly()
     {
         this
-        .AddHook((Func<string, SyntaxKind>)SyntaxFacts.GetKeywordKind, "GetKeywordKind")
-        .AddHook((Func<SyntaxKind, string>)SyntaxFacts.GetText, "GetText")
+        .AddHook((Func<string, SyntaxKind>)SyntaxFacts.GetKeywordKind, (GetKeywordKindDelegate)GetKeywordKind)
+        .AddHook((Func<SyntaxKind, string>)SyntaxFacts.GetText, (GetTextDelegate)GetText)
         .EnableHooks();
     }
 
-    List<MethodHook> hooks = new List<MethodHook>();
-    public List<MethodHook> Hooks => hooks;
+    public List<MethodHook> Hooks { get; private set; } = new List<MethodHook>();
 
+    delegate bool GetKeywordKindDelegate(ref string text, ref SyntaxKind result);
     [MethodImpl(MethodImplOptions.NoOptimization)]
     static bool GetKeywordKind(ref string text, ref SyntaxKind result)
     {
@@ -30,6 +30,7 @@ unsafe class CodeAnalysisCSharpAssembly : IHookImplemention
         return true;
     }
 
+    delegate bool GetTextDelegate(ref SyntaxKind kind, ref string result);
     [MethodImpl(MethodImplOptions.NoOptimization)]
     static bool GetText(ref SyntaxKind kind, ref string result)
     {        
@@ -41,6 +42,4 @@ unsafe class CodeAnalysisCSharpAssembly : IHookImplemention
                 
         return true;
     }
-
-    public void Dispose() => this.DisposeHooks();
 }

@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Korn.Utils.Memory", "..\Kor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Korn.Utils.System", "..\Korn.Utils.System\Korn.Utils.System\Korn.Utils.System.csproj", "{3A154989-1D8F-43B3-80AF-16A9058F4B6B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Korn.Utils.PEImageReader", "..\Korn.Utils.PEImageReader\Korn.Utils.PEImageReader\Korn.Utils.PEImageReader.csproj", "{FDB44A73-9FD1-4E2F-B1D2-2D40AC1DAB0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,14 @@ Global
 		{3A154989-1D8F-43B3-80AF-16A9058F4B6B}.Release|Any CPU.Build.0 = Release|x64
 		{3A154989-1D8F-43B3-80AF-16A9058F4B6B}.Release|x64.ActiveCfg = Release|x64
 		{3A154989-1D8F-43B3-80AF-16A9058F4B6B}.Release|x64.Build.0 = Release|x64
+		{FDB44A73-9FD1-4E2F-B1D2-2D40AC1DAB0C}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{FDB44A73-9FD1-4E2F-B1D2-2D40AC1DAB0C}.Debug|Any CPU.Build.0 = Debug|x64
+		{FDB44A73-9FD1-4E2F-B1D2-2D40AC1DAB0C}.Debug|x64.ActiveCfg = Debug|x64
+		{FDB44A73-9FD1-4E2F-B1D2-2D40AC1DAB0C}.Debug|x64.Build.0 = Debug|x64
+		{FDB44A73-9FD1-4E2F-B1D2-2D40AC1DAB0C}.Release|Any CPU.ActiveCfg = Release|x64
+		{FDB44A73-9FD1-4E2F-B1D2-2D40AC1DAB0C}.Release|Any CPU.Build.0 = Release|x64
+		{FDB44A73-9FD1-4E2F-B1D2-2D40AC1DAB0C}.Release|x64.ActiveCfg = Release|x64
+		{FDB44A73-9FD1-4E2F-B1D2-2D40AC1DAB0C}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -116,5 +126,6 @@ Global
 		{E1B82D84-A818-4666-8049-30E7DC2A80AF} = {AD1991CE-4832-4F0A-8668-698CFD9838CB}
 		{A0237352-D47B-4868-925F-58223BE4870C} = {AD1991CE-4832-4F0A-8668-698CFD9838CB}
 		{3A154989-1D8F-43B3-80AF-16A9058F4B6B} = {AD1991CE-4832-4F0A-8668-698CFD9838CB}
+		{FDB44A73-9FD1-4E2F-B1D2-2D40AC1DAB0C} = {AD1991CE-4832-4F0A-8668-698CFD9838CB}
 	EndGlobalSection
 EndGlobal
