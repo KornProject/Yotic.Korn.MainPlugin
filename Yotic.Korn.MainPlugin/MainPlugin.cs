@@ -2,6 +2,7 @@
 using System.Reflection;
 using Korn.Utils;
 using Korn;
+using Korn.Logger;
 
 class MainPlugin : Plugin
 {    
